@@ -2,7 +2,6 @@ var test = require('ava'),
     graph = require('../lib/graph');
 
 test('parse single-node graph', function(t) {
-
   var g = graph.parse(
     {
       "@context": "http://example.org/ontology/",
@@ -21,7 +20,6 @@ test('parse single-node graph', function(t) {
 });
 
 test('parse language-tagged literals', function(t) {
-
   var g = graph.parse(
     {
       "@context": "http://example.org/ontology/",
@@ -78,7 +76,6 @@ test('graph.byId fails when resource does not exist', function(t) {
 });
 
 test('node.get fails when property is not defined for node', function(t) {
-
   var g = graph.parse(
     {
       "@context": "http://example.org/ontology/",
@@ -92,6 +89,46 @@ test('node.get fails when property is not defined for node', function(t) {
     p.get("age");
   }, /property not defined for resource/);
 
+
+  t.end();
+});
+
+test('parse multi-node graph', function(t) {
+  var g = graph.parse(
+    {
+      "@context": {
+        "dc": "http://purl.org/dc/elements/1.1/",
+        "ex": "http://example.org/vocab#",
+      },
+      "@graph": [
+        {
+          "@id": "http://example.org/book/1",
+          "dc:creator": "Kurt Vonnegut",
+          "dc:title": "Cat's cradle"
+        },
+        {
+          "@id": "http://example.org/book/2",
+          "dc:creator": "Milan Kundera",
+          "dc:title": {"@value": "Langsomheten", "@language": "no"}
+        },
+        {
+          "@id": "http://example.org/book/3",
+          "dc:creator": "Plato",
+          "dc:title": "The Republic"
+        }
+      ]
+    }
+  );
+
+  t.doesNotThrow(function() {
+    g.byId("http://example.org/book/1");
+    g.byId("http://example.org/book/2");
+    g.byId("http://example.org/book/3");
+  });
+
+  var all = g.all();
+  t.same(all.map(function(node) { return node.get("title").value }),
+         ["Cat's cradle", "Langsomheten", "The Republic"]);
 
   t.end();
 });
