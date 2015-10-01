@@ -156,3 +156,79 @@ test('parse multiple values of property', function(t) {
 
   t.end();
 });
+
+test('links between nodes in graph', function(t) {
+  var g = graph.parse(
+    {
+      "@context": {
+        "dc": "http://purl.org/dc/elements/1.1/",
+        "ex": "http://example.org/vocab#",
+      },
+      "@graph": [
+        {
+          "@id": "http://example.org/work/1",
+          "dc:creator": "Kurt Vonnegut",
+          "dc:title": "Cat's cradle"
+        },
+        {
+          "@id": "http://example.org/publication/1",
+          "publicationOf": {"@id": "http://example.org/work/1"},
+          "publicationDate": "1963"
+        },
+        {
+          "@id": "http://example.org/item/1",
+          "exemplarOf": {"@id": "http://example.org/publication/1"},
+          "status": "on-loan"
+        },
+        {
+          "@id": "http://example.org/item/2",
+          "exemplarOf": {"@id": "http://example.org/publication/1"},
+          "status": "available"
+        }
+      ]
+    }
+  );
+
+
+  t.same(g.byId("http://example.org/work/1"),
+         g.byId("http://example.org/publication/1").get("publicationOf"));
+  t.same(g.byId("http://example.org/item/1").get("exemplarOf"),
+         g.byId("http://example.org/item/2").get("exemplarOf"));
+  t.is(g.byId("http://example.org/item/1").get("exemplarOf").get("publicationOf").get("title").value,
+       "Cat's cradle");
+
+  t.end();
+});
+
+/*
+test('handles circular relations', function(t) {
+  var g = graph.parse(
+    {
+      "@context": {
+        "dc": "http://purl.org/dc/elements/1.1/",
+        "ex": "http://example.org/vocab#",
+      },
+      "@id": "http://example.org/work/1",
+      "dc:creator": "Kurt Vonnegut",
+      "dc:title": "Cat's cradle",
+      "hasPublication": {
+        "@id": "http://example.org/publication/1",
+        "publicationOf": {"@id": "http://example.org/work/1"},
+        "publicationDate": "1963",
+        "hasExemplar": [
+          {
+            "@id": "http://example.org/item/1",
+            "exemplarOf": {"@id": "http://example.org/publication/1"},
+            "status": "on-loan"
+          },
+          {
+            "@id": "http://example.org/item/2",
+            "exemplarOf": {"@id": "http://example.org/publication/1"},
+            "status": "available"
+          }
+        ]
+      }
+    }
+  );
+});
+*/
