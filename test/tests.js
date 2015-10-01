@@ -134,3 +134,25 @@ test('parse multi-node graph', function(t) {
 
   t.end();
 });
+
+test('parse multiple values of property', function(t) {
+  var g = graph.parse(
+    {
+      "@context": "http://example.org/ontology/",
+      "@id": "http://example.org/book/1",
+      "title": "Rundt solen i ring",
+      "creator": ["Tor Åge Bringsværd", {"@value": "Jon Bing", "@type": "creator"}]
+    }
+  );
+
+  var b = g.byId("http://example.org/book/1");
+  t.is(b.get("creator").value, "Tor Åge Bringsværd");
+  t.same(b.getAll("creator").map(function(c) { return c.value; }),
+         ["Tor Åge Bringsværd", "Jon Bing"]);
+  t.same(b.getAll("elevator"), []);
+  t.is(b.getCount("title"), 1);
+  t.is(b.getCount("creator"), 2);
+  t.is(b.getCount("elevator"), 0);
+
+  t.end();
+});
