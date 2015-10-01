@@ -41,3 +41,4 @@ l.lang => "no"
 
 ## Limitations
 * It will not parse graphs containing blank nodes.
+* JSON-LD is a very flexible format - allowing you to represent the same information in multiple ways. Not all of these representations are supported yet, but may eventually be so if I encounter them in my work. Currently unsupported keyword: @container, @list, @reverse, @index, @vocab, @base, @set, :.
