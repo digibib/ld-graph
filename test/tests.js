@@ -200,8 +200,34 @@ test('links between nodes in graph', function(t) {
   t.end();
 });
 
-/*
+
 test('handles circular relations', function(t) {
+  var g = graph.parse(
+    {
+      "@context": "http://example.org/vocab#",
+      "@graph": [
+        {
+          "@id": "http://example.org/person/1",
+          "name": "Joe",
+          "loves": {"@id": "http://example.org/person/2"}
+        },
+        {
+          "@id": "http://example.org/person/2",
+          "name": "Jane",
+          "loves": {"@id": "http://example.org/person/1"}
+        }
+      ]
+    }
+  );
+
+  t.same(g.byId("http://example.org/person/1").get("loves").get("loves"),
+         g.byId("http://example.org/person/1"));
+
+  t.end();
+});
+
+/*
+test('parses resource hierarchy', function(t) {
   var g = graph.parse(
     {
       "@context": {
@@ -230,5 +256,10 @@ test('handles circular relations', function(t) {
       }
     }
   );
+
+  t.same(g.byId("http://example.org/work/1"),
+         g.byId("http://example.org/work/1").get("hasPublication").get("publicationOf"));
+
+  t.end();
 });
 */
