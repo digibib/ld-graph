@@ -44,6 +44,7 @@ test('parse typed literals', function(t) {
       },
       "@id": "http://example.org/book/1",
       "title": {"@value": "Granbar", "@language": "nb-no"},
+      "subtitle": "en roman",
       "numPages": {"@value": "153", "@type": "xsd:integer"},
       "read": {"@value": "no","@type": "http://example.org/hasRead"}
     }
@@ -51,6 +52,7 @@ test('parse typed literals', function(t) {
 
   var book = g.byId("http://example.org/book/1");
   t.is(book.get("title").type, "http://www.w3.org/2000/01/rdf-schema#langString");
+  t.is(book.get("subtitle").type, "http://www.w3.org/2001/XMLSchema#string");
   t.is(book.get("numPages").type, "http://www.w3.org/2001/XMLSchema#integer");
   t.is(book.get("read").type, "http://example.org/hasRead");
 
