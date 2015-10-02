@@ -226,6 +226,44 @@ test('handles circular relations', function(t) {
   t.end();
 });
 
+test('filter resources by type', function(t) {
+  var g = graph.parse(
+    {
+      "@context": "http://example.org/vocab#",
+      "@graph": [
+        {
+          "@id": "http://example.org/work/1",
+          "@type": "Work",
+          "title": "My life"
+        },
+        {
+          "@id": "http://example.org/publication/1",
+          "@type": "Publication",
+          "publicationOf": {"@id": "http://example.org/work/1"},
+          "hasExemplars": [
+            {"@id": "http://example.org/item/1"},
+            {"@id": "http://example.org/item/2"}
+          ]
+        },
+        {
+          "@id": "http://example.org/item/1",
+          "@type": "Item",
+        },
+        {
+          "@id": "http://example.org/item/2",
+          "@type": "Item",
+        }
+      ]
+    }
+  );
+
+  t.same(g.byType("Work")[0],
+         g.byId("http://example.org/work/1"));
+  t.same(g.byType("Item"),
+         g.byId("http://example.org/publication/1").getAll("hasExemplars"));
+  t.end();
+});
+
 /*
 test('parses resource hierarchy', function(t) {
   var g = graph.parse(
