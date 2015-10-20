@@ -296,6 +296,26 @@ test('filter resources by type', function(t) {
   t.end();
 });
 
+test('can merge two graphs', function(t) {
+  var g = graph.parse(
+    {
+      "@context": "http://example.org/vocab#",
+      "@id": "http://example.org/person/1",
+      "name": "Tarzan",
+      "likes": {"@id": "http://example.org/person/2"}
+    },
+    {
+      "@context": "http://example.org/vocab#",
+      "@id": "http://example.org/person/2",
+      "name": "Jane"
+    }
+  );
+
+  t.same(g.byId("http://example.org/person/1").out("likes").get("name").value,
+         "Jane");
+
+  t.end();
+});
 /*
 test('parses resource hierarchy', function(t) {
   var g = graph.parse(
