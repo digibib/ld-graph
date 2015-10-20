@@ -6,7 +6,8 @@ test('parse single-node graph', function(t) {
     {
       "@id": "http://example.org/person/1",
       "http://example.org/ontology#name": "Jane Doe",
-      "http://example.org/ontology#jobTitle": "Professor"
+      "http://example.org/ontology#jobTitle": "Professor",
+      "wearsGlasses": true
     }
   );
 
@@ -14,6 +15,7 @@ test('parse single-node graph', function(t) {
   t.is(p.id, "http://example.org/person/1");
   t.is(p.get("name").value, "Jane Doe");
   t.is(p.get("jobTitle").value, "Professor");
+  t.is(p.get("wearsGlasses").value, true);
 
   t.end();
 });
