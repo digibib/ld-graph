@@ -93,32 +93,22 @@ You can also ask for nodes by type, which returns an array of nodes.
 var items = g.byType("Item");
 ```
 
-Given a node, you can ask for it's literal values by the `key` method, which returns a Literal object with it's value, datatype and language-tag (if present):
+Given a node, you can ask for it's literal values by the `get` method, which returns a Literal object with it's value, datatype and language-tag (if present):
 
 ```javscript
-w.key("title")
+w.get("title")
 // => {value: "Cat's cradle", type: "http://www.w3.org/2000/01/rdf-schema#langString", "lang": "en"}
 ```
 
 If the node doesn't have a property defined for the given key, an error is raised.
 
-There is also a convenience method `keyVal`, which returns only the value as a string, or `undefined` if the property is not defined for the node:
+The `get` method only returns the first literal, even if there are more defined. To get them all, use `getAll`, which returns an array of Literal objects (or an empty array, if the property is not defined for the node):
 
 ```javscript
-w.keyVal("title")
-// =>  "Cat's cradle"
-
-w.keyVal("color")
-// => undefined
-```
-
-The `key` and `keyVal` methods only returns the first literal, even if there are more defined. To get them all, use `keyAll`, which returns an array of Literal objects (or an empty array, if the property is not defined for the node):
-
-```javscript
-w.keyAll("themes").map(function (l) { return l.value; })
+w.getAll("themes").map(function (l) { return l.value; })
 \\ => ["free will", "science", "nucelar war"]
 
-w.keyAll("xyz")
+w.getAll("xyz")
 \\ => []
 ```
 

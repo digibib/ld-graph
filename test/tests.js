@@ -191,13 +191,43 @@ test('links between nodes in graph', function(t) {
 
 
   t.same(g.byId("http://example.org/work/1"),
-         g.byId("http://example.org/publication/1").get("publicationOf"));
-  t.same(g.byId("http://example.org/item/1").get("exemplarOf"),
-         g.byId("http://example.org/item/2").get("exemplarOf"));
-  t.is(g.byId("http://example.org/item/1").get("exemplarOf").get("publicationOf").get("title").value,
+         g.byId("http://example.org/publication/1").out("publicationOf"));
+  t.same(g.byId("http://example.org/work/1").in("publicationOf"),
+         g.byId("http://example.org/publication/1"));
+  t.same(g.byId("http://example.org/item/1").out("exemplarOf"),
+         g.byId("http://example.org/item/2").out("exemplarOf"));
+  t.is(g.byId("http://example.org/item/1").out("exemplarOf").out("publicationOf").get("title").value,
        "Cat's cradle");
 
   t.end();
+});
+
+test('multiple links', function(t) {
+  var g = graph.parse(
+    {
+      "@context": "http://example.org/vocab#",
+      "@graph": [
+        {
+          "@id": "http://example.org/person/1",
+          "name": "Joe",
+          "hates": [{"@id": "http://example.org/food/1"}, {"@id": "http://example.org/food/2"}]
+        },
+        {
+          "@id": "http://example.org/food/1",
+          "name": "Broccoli",
+        },
+        {
+          "@id": "http://example.org/food/2",
+          "name": "Grapefruit",
+        }
+      ]
+    }
+  );
+
+  t.same(g.byId("http://example.org/person/1").outAll("hates").map(function(n) { return n.get("name").value; }),
+         ["Broccoli", "Grapefruit"]);
+
+  t.end()
 });
 
 
@@ -220,8 +250,11 @@ test('handles circular relations', function(t) {
     }
   );
 
-  t.same(g.byId("http://example.org/person/1").get("loves").get("loves"),
+  t.same(g.byId("http://example.org/person/1").out("loves").out("loves"),
          g.byId("http://example.org/person/1"));
+
+  t.same(g.byId("http://example.org/person/2").in("loves").in("loves"),
+         g.byId("http://example.org/person/2"));
 
   t.end();
 });
@@ -259,8 +292,8 @@ test('filter resources by type', function(t) {
 
   t.same(g.byType("Work")[0],
          g.byId("http://example.org/work/1"));
-  //t.same(g.byType("Item"),
-  //       g.byId("http://example.org/publication/1").getAll("hasExemplars"));
+  t.same(g.byType("Item"),
+         g.byId("http://example.org/publication/1").outAll("hasExemplars"));
   t.end();
 });
 
