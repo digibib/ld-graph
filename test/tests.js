@@ -4,10 +4,9 @@ var test = require('ava'),
 test('parse single-node graph', function(t) {
   var g = graph.parse(
     {
-      "@context": "http://example.org/ontology/",
       "@id": "http://example.org/person/1",
-      "name": "Jane Doe",
-      "jobTitle": "Professor"
+      "http://example.org/ontology#name": "Jane Doe",
+      "http://example.org/ontology#jobTitle": "Professor"
     }
   );
 
