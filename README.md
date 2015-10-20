@@ -10,7 +10,7 @@ Work in progress. Unstable. API not finalized
 
 Example input used throughout the documentation:
 
-```javscript
+```
 var JSONLD = {
   "@context": {
         "dc": "http://purl.org/dc/elements/1.1/",
@@ -65,19 +65,19 @@ var JSONLD = {
 
 Import the library:
 
-```javscript
+```
 var graph = require("ld-graph");
 ```
 
 Parse a RDF graph in JSON-LD format into a graph object:
 
-```javscript
+```
 var g = graph.parse(JSONLD);
 ```
 
 You can now acces a node by Id(URI):
 
-```javscript
+```
 var w = g.byId("http://example.org/work/1"),
     p = g.byId("http://example.org/publication/1"),
     i1 = g.byId("http://example.org/item/1"),
@@ -95,7 +95,7 @@ var items = g.byType("Item");
 
 Given a node, you can ask for it's literal values by the `get` method, which returns a Literal object with it's value, datatype and language-tag (if present):
 
-```javscript
+```
 w.get("title")
 // => {value: "Cat's cradle", type: "http://www.w3.org/2000/01/rdf-schema#langString", "lang": "en"}
 ```
@@ -104,7 +104,7 @@ If the node doesn't have a property defined for the given key, an error is raise
 
 The `get` method only returns the first literal, even if there are more defined. To get them all, use `getAll`, which returns an array of Literal objects (or an empty array, if the property is not defined for the node):
 
-```javscript
+```
 w.getAll("themes").map(function (l) { return l.value; })
 \\ => ["free will", "science", "nucelar war"]
 
