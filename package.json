@@ -1,10 +1,11 @@
 {
  "name": "ld-graph",
  "version": "0.1.0",
-  "scripts": {
+ "scripts": {
     "test": "ava"
-  },
-  "devDependencies": {
+ },
+ "devDependencies": {
     "ava": "^0.2.0"
-  }
+ },
+ "main": "lib/graph.js"
 }
