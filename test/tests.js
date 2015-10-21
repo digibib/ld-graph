@@ -232,6 +232,21 @@ test('multiple links', function(t) {
   t.end()
 });
 
+test('nodes available as subject, even if only object in graph', function(t) {
+  var g = graph.parse(
+    {
+      "@context": "http://example.org/ontology/",
+      "@id": "http://example.org/book/1",
+      "creator": {"@id": "http://example.org/creator/1"}
+    }
+  );
+
+  t.same(g.byId("http://example.org/book/1"),
+         g.byId("http://example.org/creator/1").in("creator"));
+
+  t.end();
+});
+
 
 test('handles circular relations', function(t) {
   var g = graph.parse(
