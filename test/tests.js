@@ -16,6 +16,7 @@ test('parse single-node graph', function(t) {
   t.is(p.get("name").value, "Jane Doe");
   t.is(p.get("jobTitle").value, "Professor");
   t.is(p.get("wearsGlasses").value, true);
+  t.is(p.get("wearsGlasses").type, "http://www.w3.org/2001/XMLSchema#boolean");
 
   t.end();
 });
