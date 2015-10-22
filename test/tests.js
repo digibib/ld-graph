@@ -16,7 +16,7 @@ test('parse single-node graph', function(t) {
   t.is(p.get("name").value, "Jane Doe");
   t.is(p.get("jobTitle").value, "Professor");
   t.is(p.get("wearsGlasses").value, true);
-  t.is(p.get("wearsGlasses").type, "http://www.w3.org/2001/XMLSchema#boolean");
+  t.is(p.get("wearsGlasses").type, "boolean");
 
   t.end();
 });
@@ -53,10 +53,10 @@ test('parse typed literals', function(t) {
   );
 
   var book = g.byId("http://example.org/book/1");
-  t.is(book.get("title").type, "http://www.w3.org/2000/01/rdf-schema#langString");
-  t.is(book.get("subtitle").type, "http://www.w3.org/2001/XMLSchema#string");
-  t.is(book.get("numPages").type, "http://www.w3.org/2001/XMLSchema#integer");
-  t.is(book.get("read").type, "http://example.org/hasRead");
+  t.is(book.get("title").type, "langString");
+  t.is(book.get("subtitle").type, "string");
+  t.is(book.get("numPages").type, "integer");
+  t.is(book.get("read").type, "hasRead");
 
   t.end();
 });
@@ -279,29 +279,29 @@ test('handles circular relations', function(t) {
 test('filter resources by type', function(t) {
   var g = graph.parse(
     {
-      "@context": "http://example.org/vocab#",
+      "@context": {"vocab": "http://example.org/vocab#"},
       "@graph": [
         {
           "@id": "http://example.org/work/1",
-          "@type": "Work",
-          "title": "My life"
+          "@type": "vocab:Work",
+          "vocab:title": "My life"
         },
         {
           "@id": "http://example.org/publication/1",
           "@type": "Publication",
-          "publicationOf": {"@id": "http://example.org/work/1"},
-          "hasExemplars": [
+          "vocab:publicationOf": {"@id": "http://example.org/work/1"},
+          "vocab:hasExemplars": [
             {"@id": "http://example.org/item/1"},
             {"@id": "http://example.org/item/2"}
           ]
         },
         {
           "@id": "http://example.org/item/1",
-          "@type": "Item",
+          "@type": "vocab:Item",
         },
         {
           "@id": "http://example.org/item/2",
-          "@type": "Item",
+          "@type": "vocab:Item",
         }
       ]
     }
