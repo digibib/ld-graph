@@ -334,6 +334,39 @@ test('can merge two graphs', function(t) {
 
   t.end();
 });
+
+test('test property/relation existence', function(t) {
+  var g = graph.parse(
+    {
+      "@context": {
+        "dc": "http://purl.org/dc/elements/1.1/",
+        "ex": "http://example.org/vocab#",
+      },
+      "@graph": [
+        {
+          "@id": "http://example.org/work/1",
+          "dc:creator": "Kurt Vonnegut",
+          "dc:title": "Cat's cradle"
+        },
+        {
+          "@id": "http://example.org/publication/1",
+          "publicationOf": {"@id": "http://example.org/work/1"},
+          "publicationDate": "1963"
+        },
+      ]
+    }
+  );
+
+  var b = g.byId("http://example.org/work/1");
+  t.is(b.has("title"), true);
+  t.is(b.has("issueYear"), false);
+  t.is(b.hasOut("hasPublication"), false);
+  t.is(b.hasIn("publicationOf"), true);
+  t.is(g.byId("http://example.org/publication/1").hasOut("publicationOf"), true);
+
+  t.end();
+});
+
 /*
 test('parses resource hierarchy', function(t) {
   var g = graph.parse(
