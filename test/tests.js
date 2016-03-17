@@ -48,6 +48,7 @@ test('parse typed literals', function(t) {
       "title": {"@value": "Granbar", "@language": "nb-no"},
       "subtitle": "en roman",
       "numPages": {"@value": "153", "@type": "xsd:integer"},
+      "numPagesImplicitType": 153,
       "read": {"@value": "no","@type": "http://example.org/hasRead"}
     }
   );
@@ -56,6 +57,7 @@ test('parse typed literals', function(t) {
   t.is(book.get("title").type, "langString");
   t.is(book.get("subtitle").type, "string");
   t.is(book.get("numPages").type, "integer");
+  t.is(book.get("numPagesImplicitType").type, "integer");
   t.is(book.get("read").type, "hasRead");
 
   t.end();
@@ -404,3 +406,44 @@ test('parses resource hierarchy', function(t) {
   t.end();
 });
 */
+
+test('test parse blank node with a number', function(t) {
+  var g = graph.parse(
+      {
+        "@graph": [
+          {
+            "@id": "_:b0",
+            "@type": "deichman:SerialIssue",
+            "deichman:issue": 23,
+            "deichman:serial": {
+              "@id": "http://192.168.50.12:8005/ser22332"
+            }
+          },
+          {
+            "@id": "http://192.168.50.12:8005/publication/p278128608396",
+            "@type": "deichman:Publication",
+            "deichman:inSerial": {
+              "@id": "_:b0"
+            },
+            "deichman:publicationOf": {
+              "@id": "http://192.168.50.12:8005/work/w411874932273"
+            },
+            "deichman:recordID": "231"
+          }
+        ],
+        "@context": {
+          "deichman": "http://192.168.50.12:8005/ontology#",
+          "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+        }
+      }
+  );
+
+  var blankNode = g.byType("SerialIssue")[0];
+  t.is(blankNode.get("issue").value, 23);
+  t.is(blankNode.hasOut("serial"), true);
+  t.same(blankNode.in("inSerial").id, "http://192.168.50.12:8005/publication/p278128608396");
+
+  var publicationNode = g.byType("Publication")[0];
+  t.is(publicationNode.out("inSerial").getAll("issue")[0].value, 23);
+  t.end();
+});
