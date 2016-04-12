@@ -413,7 +413,10 @@ test('test parse blank node with a number', function(t) {
         "@graph": [
           {
             "@id": "_:b0",
-            "@type": "deichman:SerialIssue",
+            "@type": [
+              "deichman:SerialIssue",
+              "deichman:OtherType"
+            ],
             "deichman:issue": 23,
             "deichman:serial": {
               "@id": "http://192.168.50.12:8005/ser22332"
@@ -438,7 +441,10 @@ test('test parse blank node with a number', function(t) {
       }
   );
 
-  var blankNode = g.byType("SerialIssue")[0];
+  var blankNode = g.byType("deichman:SerialIssue")[0];
+  t.is(blankNode.isA("deichman:SerialIssue"), true);
+  t.is(blankNode.isA("deichman:OtherType"), true);
+  t.is(blankNode.isA("deichman:UnknownType"), false);
   t.is(blankNode.get("issue").value, 23);
   t.is(blankNode.hasOut("serial"), true);
   t.same(blankNode.in("inSerial").id, "http://192.168.50.12:8005/publication/p278128608396");
