@@ -289,6 +289,11 @@ test('filter resources by type', function(t) {
           "vocab:title": "My life"
         },
         {
+          "@id": "http://example.org/work/2",
+          "@type": ["vocab:Work"],
+          "vocab:title": "My life"
+        },
+        {
           "@id": "http://example.org/publication/1",
           "@type": "Publication",
           "vocab:publicationOf": {"@id": "http://example.org/work/1"},
@@ -303,7 +308,7 @@ test('filter resources by type', function(t) {
         },
         {
           "@id": "http://example.org/item/2",
-          "@type": "vocab:Item",
+          "@type": "vocab:Item"
         }
       ]
     }
@@ -311,8 +316,12 @@ test('filter resources by type', function(t) {
 
   t.same(g.byType("Work")[0],
          g.byId("http://example.org/work/1"));
+  t.same(g.byType("Work")[1],
+         g.byId("http://example.org/work/2"));
+  t.is(g.byType("Work")[0].isA("Work"), true)
   t.same(g.byType("Item"),
          g.byId("http://example.org/publication/1").outAll("hasExemplars"));
+  t.is(g.byType("Item")[0].isA("Item2"), true)
   t.end();
 });
 
