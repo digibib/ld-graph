@@ -440,7 +440,9 @@ test('test parse blank node with a number', function(t) {
             "deichman:publicationOf": {
               "@id": "http://192.168.50.12:8005/work/w411874932273"
             },
-            "deichman:recordID": "231"
+            "deichman:recordID": "231",
+            "deichman:ageLimit": [2, 15],
+            "deichman:numberOfPages": 100
           }
         ],
         "@context": {
@@ -460,5 +462,11 @@ test('test parse blank node with a number', function(t) {
 
   var publicationNode = g.byType("Publication")[0];
   t.is(publicationNode.out("inSerial").getAll("issue")[0].value, 23);
+  t.is(publicationNode.getAll("ageLimit")[0].value, 2)
+  t.is(publicationNode.getAll("ageLimit")[0].type, 'integer')
+  t.is(publicationNode.getAll("ageLimit")[1].value, 15)
+  t.is(publicationNode.getAll("ageLimit")[1].type, 'integer')
+  t.is(publicationNode.get("numberOfPages").value, 100)
+  t.is(publicationNode.get("numberOfPages").type, 'integer')
   t.end();
 });
